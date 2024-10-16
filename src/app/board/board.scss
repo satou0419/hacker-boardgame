@@ -276,3 +276,43 @@ input {
         // You can add more styles for other legend items as needed
     }
 }
+// board.scss
+@keyframes rotate-clockwise {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+    50% {
+        transform: rotate(90deg) scale(1.1); /* Slightly enlarge while rotating */
+    }
+    100% {
+        transform: rotate(180deg) scale(1);
+    }
+}
+
+@keyframes rotate-counterclockwise {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+    50% {
+        transform: rotate(-90deg) scale(1.1); /* Rotate in opposite direction */
+    }
+    100% {
+        transform: rotate(-180deg) scale(1);
+    }
+}
+
+.grid-box {
+    transition: transform 0.5s ease;
+}
+
+/* Apply clockwise animation */
+.animate-clockwise {
+    animation: rotate-clockwise 0.5s ease forwards;
+    background-color: green; /* Example of styling to test */
+}
+
+/* Apply counterclockwise animation */
+.animate-counterclockwise {
+    animation: rotate-counterclockwise 0.5s ease forwards;
+    background-color: red; /* Example of styling to test */
+}

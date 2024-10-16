@@ -25,6 +25,14 @@ type BoxValue =
 
 export default function Board() {
     // Create an array of 16 boxes with null values initially
+    const [animatedBoxes, setAnimatedBoxes] = useState<{
+        indices: number[]
+        direction: string | null
+    }>({
+        indices: [],
+        direction: null,
+    })
+
     const [grid, setGrid] = useState<(BoxValue | string)[]>(
         Array(16).fill(null)
     )
@@ -133,30 +141,54 @@ export default function Board() {
             setActiveBox(index) // Set active platform box
         }
     }
-
-    // Function to rotate the 2x2 grid clockwise
     const rotateGridClockwise = (startIndex: number) => {
         const newGrid = [...grid]
         const temp = newGrid[startIndex]
-        newGrid[startIndex] = newGrid[startIndex + 4] // Move box from (start + 4) to (start)
-        newGrid[startIndex + 4] = newGrid[startIndex + 5] // Move box from (start + 5) to (start + 4)
-        newGrid[startIndex + 5] = newGrid[startIndex + 1] // Move box from (start + 1) to (start + 5)
-        newGrid[startIndex + 1] = temp // Move original start box to (start + 1)
+        newGrid[startIndex] = newGrid[startIndex + 4]
+        newGrid[startIndex + 4] = newGrid[startIndex + 5]
+        newGrid[startIndex + 5] = newGrid[startIndex + 1]
+        newGrid[startIndex + 1] = temp
+
+        setAnimatedBoxes({
+            indices: [
+                startIndex,
+                startIndex + 1,
+                startIndex + 4,
+                startIndex + 5,
+            ],
+            direction: "clockwise", // Set direction to clockwise
+        })
 
         setGrid(newGrid)
+        setTimeout(() => {
+            setAnimatedBoxes({ indices: [], direction: null }) // Clear animation state after the animation completes
+        }, 500)
     }
 
-    // Function to rotate the 2x2 grid counterclockwise
     const rotateGridCounterclockwise = (startIndex: number) => {
         const newGrid = [...grid]
         const temp = newGrid[startIndex]
-        newGrid[startIndex] = newGrid[startIndex + 1] // Move box from (start + 1) to (start)
-        newGrid[startIndex + 1] = newGrid[startIndex + 5] // Move box from (start + 5) to (start + 1)
-        newGrid[startIndex + 5] = newGrid[startIndex + 4] // Move box from (start + 4) to (start + 5)
-        newGrid[startIndex + 4] = temp // Move original start box to (start + 4)
+        newGrid[startIndex] = newGrid[startIndex + 1]
+        newGrid[startIndex + 1] = newGrid[startIndex + 5]
+        newGrid[startIndex + 5] = newGrid[startIndex + 4]
+        newGrid[startIndex + 4] = temp
+
+        setAnimatedBoxes({
+            indices: [
+                startIndex,
+                startIndex + 1,
+                startIndex + 4,
+                startIndex + 5,
+            ],
+            direction: "counterclockwise", // Set direction to counterclockwise
+        })
 
         setGrid(newGrid)
+        setTimeout(() => {
+            setAnimatedBoxes({ indices: [], direction: null }) // Clear animation state after the animation completes
+        }, 500)
     }
+
     const handleLegendClick = (legend: BoxValue) => {
         if (activeBox !== null) {
             const newGrid = [...grid]
@@ -309,7 +341,13 @@ export default function Board() {
                         key={index}
                         className={`grid-box ${
                             activeBox === index ? "active" : ""
-                        }`}
+                        } ${
+                            animatedBoxes.indices.includes(index)
+                                ? animatedBoxes.direction === "clockwise"
+                                    ? "animate-clockwise"
+                                    : "animate-counterclockwise"
+                                : ""
+                        }`} // Use appropriate animation class based on the direction
                         onClick={() => handleBoxClick(index)}
                         draggable={
                             !!(
@@ -319,10 +357,10 @@ export default function Board() {
                             )
                         }
                         onDragStart={() => handleDragStart(index, box)}
-                        onDragOver={handleDragOver} // Prevent default behavior to allow dropping
-                        onDrop={() => handleDrop(index)} // Handle drop
+                        onDragOver={handleDragOver}
+                        onDrop={() => handleDrop(index)}
                     >
-                        {renderBoxContent(box)} {/* Render the box content */}
+                        {renderBoxContent(box)}
                     </div>
                 ))}
 
