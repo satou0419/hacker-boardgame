@@ -1,0 +1,257 @@
+.board-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 5px; /* Set gap to 0 to better position circles directly */
+    width: 80vw; /* Responsive width */
+    aspect-ratio: 1; /* Maintain a square aspect ratio */
+    max-width: 500px; /* Optional max width */
+    max-height: 500px; /* Optional max height */
+    overflow: hidden; /* Hide overflow */
+    position: relative; /* Set position relative for absolute children */
+    border-radius: 10px;
+}
+.grid-box {
+    border: 1px solid #ccc; /* Border for each box */
+    display: flex;
+    align-items: center;
+    font-size: 24px; /* Base font size for content */
+    text-align: center;
+    background-color: grey;
+    font-weight: bold;
+
+    /* Ensure text shrinks if it overflows */
+    overflow: auto; /* Hide overflowing content */
+    padding: 10px; /* Add padding for spacing */
+    box-sizing: border-box; /* Include padding in element's total width and height */
+}
+/* Styling for the small circles */
+.intersection {
+    width: 40px; /* Fixed size for circles */
+    height: 40px; /* Fixed size for circles */
+    border-radius: 50%;
+    position: absolute; /* Absolute positioning for anchoring */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+/* Positioning for each circle based on grid */
+.circle-1 {
+    top: calc(25% - 20px); /* Position between box 1 and 2 */
+    left: calc(12.5% - -40px); /* Left side */
+    background-color: red;
+}
+
+.circle-2 {
+    top: calc(25% - 20px); /* Position between box 3 and 4 */
+    left: calc(87.5% - 80px); /* Right side */
+    background-color: blue;
+}
+
+.circle-3 {
+    top: calc(50% - 20px); /* Centered vertically */
+    left: calc(50% - 20px); /* Centered horizontally */
+    background-color: orange;
+}
+
+.circle-4 {
+    top: calc(75% - 20px); /* Position between box 9 and 10 */
+    left: calc(12.5% - -40px); /* Left side */
+    background-color: purple;
+}
+
+.circle-5 {
+    top: calc(75% - 20px); /* Position between box 11 and 12 */
+    left: calc(87.5% - 80px); /* Right side */
+    background-color: green;
+}
+
+/* Existing styles... */
+
+.input-table {
+    margin-top: 20px; /* Space above the table */
+    overflow-x: auto; /* Allow horizontal scroll on smaller screens */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px; /* Space between grid and table */
+}
+
+th,
+td {
+    border: 1px solid #ccc; /* Table borders */
+    padding: 8px; /* Padding for cells */
+    text-align: center; /* Center text */
+}
+
+input {
+    width: 100%; /* Full width of the cell */
+    border: 1px solid #ccc; /* Border for inputs */
+    border-radius: 4px; /* Rounded corners for inputs */
+    padding: 4px; /* Padding inside inputs */
+    box-sizing: border-box; /* Ensure padding doesn't affect width */
+}
+.legend {
+    display: flex;
+    align-items: center;
+    gap: 15px; // Space between items
+    margin-top: 20px;
+}
+.grid-box.active {
+    background-color: gold;
+    border: 2px solid #ffdf00;
+}
+.controls {
+    margin-top: 20px;
+    text-align: center;
+
+    button {
+        padding: 10px 20px;
+        background-color: #ff4d4d;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+            background-color: #ff3333;
+        }
+    }
+}
+.grid-4x11 {
+    display: grid;
+    grid-template-columns: repeat(11, 100px); /* 11 columns */
+    margin-top: 20px;
+    gap: 10px;
+
+    .grid-4x11-row {
+        display: contents; /* Allows direct children to be grid items */
+    }
+
+    .grid-4x11-box {
+        width: 100px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #ccc;
+        background-color: #f9f9f9; /* Light gray for default boxes */
+        color: #333; /* Darker text color for better contrast */
+
+        &:nth-child(1) {
+            font-weight: bold; /* Bold for the first column */
+            background-color: #007bff; /* Blue for the first column */
+            color: white; /* White text for contrast */
+        }
+
+        &:nth-child(n + 2) {
+            background-color: #e0f7fa; /* Light cyan for numbered columns */
+        }
+
+        &:nth-child(n + 2):hover {
+            background-color: #b2ebf2; /* Slightly darker cyan on hover */
+        }
+    }
+
+    /* Specific styles for each row can be added if needed */
+    .grid-4x11-row:nth-child(2) .grid-4x11-box {
+        background-color: #ffccbc; /* Light peach for the platform row */
+    }
+
+    .grid-4x11-row:nth-child(3) .grid-4x11-box {
+        background-color: #ff8282; /* Light yellow for the red agent row */
+    }
+
+    .grid-4x11-row:nth-child(4) .grid-4x11-box {
+        background-color: #bbdefb; /* Light blue for the blue agent row */
+    }
+}
+.grid-box.active {
+    background-color: gold;
+    border: 2px solid #ffdf00;
+}
+.grid-4x11-box.active {
+    background-color: gold;
+    border: 2px solid #ffdf00;
+}
+
+.legend-circles {
+    display: flex;
+}
+// Button Styles
+.control-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+
+    .control-button {
+        padding: 10px 20px; // Add padding
+        margin: 0 10px; // Margin between buttons
+        border: none; // Remove default border
+        border-radius: 5px; // Rounded corners
+        cursor: pointer; // Pointer cursor on hover
+        font-size: 16px; // Font size
+        font-weight: bold; // Bold text
+        transition: background-color 0.3s, transform 0.3s; // Transition for hover effect
+
+        // Default button style
+        background-color: #007bff; // Primary color
+        color: white; // Text color
+
+        // Hover effect
+        &:hover {
+            background-color: #0056b3; // Darker shade on hover
+            transform: translateY(-2px); // Lift effect on hover
+        }
+
+        // Active state (when button is clicked)
+        &:active {
+            transform: translateY(0); // Reset lift effect
+            background-color: #003f7f; // Even darker shade on click
+        }
+
+        // Disabled button style
+        &.disabled {
+            background-color: #d3d3d3; // Grey background
+            color: #a0a0a0; // Grey text
+            cursor: not-allowed; // Not allowed cursor
+        }
+    }
+}
+.legend {
+    display: flex;
+    flex-wrap: wrap; // Allow wrapping for smaller screens
+    justify-content: center; // Center the legend items
+    margin: 20px 0; // Add some margin for spacing
+    padding: 10px; // Add padding
+
+    span {
+        margin: 5px 10px; // Space between items
+        padding: 10px; // Padding for click area
+        border: 1px solid transparent; // Base border
+        border-radius: 5px; // Rounded corners
+        cursor: pointer; // Change cursor to pointer
+        transition: background-color 0.3s, border 0.3s; // Smooth transitions
+
+        &:hover {
+            background-color: #f0f0f0; // Change background on hover
+            border: 1px solid #ccc; // Change border color on hover
+        }
+
+        &.red-agent {
+            color: red; // Specific color for red agent
+        }
+
+        &.blue-agent {
+            color: blue; // Specific color for blue agent
+        }
+
+        // You can add more styles for other legend items as needed
+    }
+}
