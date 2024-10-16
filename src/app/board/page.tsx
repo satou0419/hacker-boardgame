@@ -2,7 +2,14 @@
 
 import { useEffect, useState } from "react"
 import "./board.scss"
-import { FaRedhat } from "react-icons/fa"
+import {
+    FaDoorOpen,
+    FaHackerrank,
+    FaRedhat,
+    FaSignOutAlt,
+    FaUserSecret,
+} from "react-icons/fa"
+import { FaArrowRightFromBracket, FaRotate } from "react-icons/fa6"
 
 // Types of items to assign
 type BoxValue =
@@ -220,18 +227,22 @@ export default function Board() {
             return (
                 <span key={i} style={{ display: "block" }}>
                     {trimmedItem === "red-agent" && (
-                        <FaRedhat style={{ color: "red" }} />
+                        <FaUserSecret style={{ color: "#e7135d" }} />
                     )}
                     {trimmedItem === "blue-agent" && (
-                        <FaRedhat style={{ color: "blue" }} />
+                        <FaUserSecret style={{ color: "#74C0FC" }} />
                     )}
                     {trimmedItem.includes("📃") && (
                         <span>📃{trimmedItem.split(" ")[0]}</span> // Display document label
                     )}
                     {trimmedItem === "alarm" && "⏰"}
                     {trimmedItem === "virus" && "🦠"}
-                    {trimmedItem === "red-exit" && "🟥"}
-                    {trimmedItem === "blue-exit" && "🟦"}
+                    {trimmedItem === "red-exit" && (
+                        <FaArrowRightFromBracket style={{ color: "#e7135d" }} />
+                    )}
+                    {trimmedItem === "blue-exit" && (
+                        <FaArrowRightFromBracket style={{ color: "#74C0FC" }} />
+                    )}
                 </span>
             )
         })
@@ -268,13 +279,13 @@ export default function Board() {
                     className="red-agent"
                     onClick={() => handleLegendClick("red-agent")}
                 >
-                    🔴 Red Agent
+                    <FaUserSecret style={{ color: "#e7135d" }} /> Red Agent
                 </span>
                 <span
                     className="blue-agent"
                     onClick={() => handleLegendClick("blue-agent")}
                 >
-                    🔵 Blue Agent
+                    <FaUserSecret style={{ color: "#74c0fc" }} /> Blue Agent
                 </span>
                 <span onClick={() => handleLegendClick("document")}>
                     📃 Document
@@ -282,10 +293,12 @@ export default function Board() {
                 <span onClick={() => handleLegendClick("alarm")}>⏰ Alarm</span>
                 <span onClick={() => handleLegendClick("virus")}>🦠 Virus</span>
                 <span onClick={() => handleLegendClick("red-exit")}>
-                    🟥 Red Exit
+                    <FaArrowRightFromBracket style={{ color: "#e7135d" }} />
+                    Red Exit
                 </span>
                 <span onClick={() => handleLegendClick("blue-exit")}>
-                    🟦 Blue Exit
+                    <FaArrowRightFromBracket style={{ color: "#74C0FC" }} />
+                    Blue Exit
                 </span>
             </section>
 
@@ -318,31 +331,49 @@ export default function Board() {
                     className="intersection circle-1"
                     onClick={() => rotateGridCounterclockwise(0)}
                 >
-                    🔄️
+                    <FaRotate
+                        style={{
+                            color: "#ededed",
+                            fontSize: "1.5em",
+                            transform: "scaleY(-1)",
+                        }}
+                    />
                 </div>
                 <div
                     className="intersection circle-2"
                     onClick={() => rotateGridClockwise(2)}
                 >
-                    🔁
+                    <FaRotate style={{ color: "#ededed", fontSize: "1.5em" }} />
                 </div>
                 <div
                     className="intersection circle-3"
                     onClick={() => rotateGridCounterclockwise(5)}
                 >
-                    🔄️
+                    <FaRotate
+                        style={{
+                            color: "#ededed",
+                            fontSize: "1.5em",
+                            transform: "scaleY(-1)",
+                        }}
+                    />
                 </div>
                 <div
                     className="intersection circle-4"
                     onClick={() => rotateGridClockwise(8)}
                 >
-                    🔁
+                    <FaRotate style={{ color: "#ededed", fontSize: "1.5em" }} />
                 </div>
                 <div
                     className="intersection circle-5"
                     onClick={() => rotateGridCounterclockwise(10)}
                 >
-                    🔄️
+                    <FaRotate
+                        style={{
+                            color: "#ededed",
+                            fontSize: "1.5em",
+                            transform: "scaleY(-1)",
+                        }}
+                    />
                 </div>
             </section>
             <div className="control-buttons">

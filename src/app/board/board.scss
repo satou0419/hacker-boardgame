@@ -2,15 +2,31 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(4, 1fr);
-    gap: 5px; /* Set gap to 0 to better position circles directly */
-    width: 80vw; /* Responsive width */
-    aspect-ratio: 1; /* Maintain a square aspect ratio */
-    max-width: 500px; /* Optional max width */
-    max-height: 500px; /* Optional max height */
-    overflow: hidden; /* Hide overflow */
-    position: relative; /* Set position relative for absolute children */
+    gap: 5px;
+    width: 80vw;
+    aspect-ratio: 1;
+    max-width: 500px;
+    max-height: 500px;
+    overflow: hidden;
+    position: relative;
     border-radius: 10px;
+    transition: transform 0.6s ease; /* Transition for rotation */
+    /* Add this to control the rotation */
 }
+
+.rotate {
+    animation: rotate-animation 0.6s ease forwards; /* Trigger animation */
+}
+
+@keyframes rotate-animation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg); /* Complete rotation */
+    }
+}
+
 .grid-box {
     border: 1px solid #ccc; /* Border for each box */
     display: flex;
@@ -42,30 +58,35 @@
     top: calc(25% - 20px); /* Position between box 1 and 2 */
     left: calc(12.5% - -40px); /* Left side */
     background-color: red;
+    border: 5px solid #0a0a0a;
 }
 
 .circle-2 {
     top: calc(25% - 20px); /* Position between box 3 and 4 */
     left: calc(87.5% - 80px); /* Right side */
     background-color: blue;
+    border: 5px solid #0a0a0a;
 }
 
 .circle-3 {
     top: calc(50% - 20px); /* Centered vertically */
     left: calc(50% - 20px); /* Centered horizontally */
     background-color: orange;
+    border: 5px solid #0a0a0a;
 }
 
 .circle-4 {
     top: calc(75% - 20px); /* Position between box 9 and 10 */
     left: calc(12.5% - -40px); /* Left side */
     background-color: purple;
+    border: 5px solid #0a0a0a;
 }
 
 .circle-5 {
     top: calc(75% - 20px); /* Position between box 11 and 12 */
     left: calc(87.5% - 80px); /* Right side */
     background-color: green;
+    border: 5px solid #0a0a0a;
 }
 
 /* Existing styles... */
