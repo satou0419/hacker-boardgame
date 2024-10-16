@@ -216,7 +216,17 @@ export default function Board() {
         }
     }, [activeCell])
 
-    // Function to handle drag start
+    // Function to calculate Manhattan distance
+    const calculateManhattanDistance = (start: number, end: number) => {
+        const gridSize = 4 // Assuming a 4x4 grid
+        const startX = start % gridSize
+        const startY = Math.floor(start / gridSize)
+        const endX = end % gridSize
+        const endY = Math.floor(end / gridSize)
+
+        return Math.abs(startX - endX) + Math.abs(startY - endY)
+    }
+
     // Function to handle drag start
     const handleDragStart = (index: number, box: BoxValue) => {
         // Allow dragging only if the box contains an agent
@@ -226,22 +236,30 @@ export default function Board() {
     }
 
     // Function to handle drop
+    // Function to handle drop with Manhattan distance restriction
     const handleDrop = (index: number) => {
         if (activeBox !== null && activeBox !== index) {
-            // Ensure not dropping on itself
-            const newGrid = [...grid]
-            const itemToMove = newGrid[activeBox] // Get the current agent or items in the box
+            // Calculate the Manhattan distance between the dragged tile and the target tile
+            const distance = calculateManhattanDistance(activeBox, index)
 
-            // If the target box is not empty, we append the agent/items to it
-            if (newGrid[index]) {
-                // Append existing items and the item being moved
-                newGrid[index] = `${newGrid[index]}, ${itemToMove}` // Append agent/items to existing value
+            // Only allow drop if the distance is 1 (adjacent tiles)
+            if (distance === 1) {
+                const newGrid = [...grid]
+                const itemToMove = newGrid[activeBox] // Get the current agent or items in the box
+
+                // If the target box is not empty, we append the agent/items to it
+                if (newGrid[index]) {
+                    newGrid[index] = `${newGrid[index]}, ${itemToMove}` // Append agent/items to existing value
+                } else {
+                    newGrid[index] = itemToMove // Move agent/items if target box is empty
+                }
+
+                newGrid[activeBox] = null // Clear the original box
+                setGrid(newGrid)
             } else {
-                newGrid[index] = itemToMove // Move agent/items if target box is empty
+                // If the tile is too far, display an alert
+                alert("You can only move to an adjacent box!")
             }
-
-            newGrid[activeBox] = null // Clear the original box
-            setGrid(newGrid)
         }
         setActiveBox(null) // Reset active box after drop
     }
@@ -334,168 +352,181 @@ export default function Board() {
                 </span>
             </section>
 
-            {/* Grid Section */}
-            <section className="board-grid">
-                {grid.map((box, index) => (
+            <section className="upper-platform">
+                {/* Grid Section */}
+                <section className="board-grid">
+                    {grid.map((box, index) => (
+                        <div
+                            key={index}
+                            className={`grid-box ${
+                                activeBox === index ? "active" : ""
+                            } ${
+                                animatedBoxes.indices.includes(index)
+                                    ? animatedBoxes.direction === "clockwise"
+                                        ? "animate-clockwise"
+                                        : "animate-counterclockwise"
+                                    : ""
+                            }`} // Use appropriate animation class based on the direction
+                            onClick={() => handleBoxClick(index)}
+                            draggable={
+                                !!(
+                                    box &&
+                                    (box.includes("red-agent") ||
+                                        box.includes("blue-agent"))
+                                )
+                            }
+                            onDragStart={() => handleDragStart(index, box)}
+                            onDragOver={handleDragOver}
+                            onDrop={() => handleDrop(index)}
+                        >
+                            {renderBoxContent(box)}
+                        </div>
+                    ))}
+
+                    {/* Intersection Circles */}
                     <div
-                        key={index}
-                        className={`grid-box ${
-                            activeBox === index ? "active" : ""
-                        } ${
-                            animatedBoxes.indices.includes(index)
-                                ? animatedBoxes.direction === "clockwise"
-                                    ? "animate-clockwise"
-                                    : "animate-counterclockwise"
-                                : ""
-                        }`} // Use appropriate animation class based on the direction
-                        onClick={() => handleBoxClick(index)}
-                        draggable={
-                            !!(
-                                box &&
-                                (box.includes("red-agent") ||
-                                    box.includes("blue-agent"))
-                            )
-                        }
-                        onDragStart={() => handleDragStart(index, box)}
-                        onDragOver={handleDragOver}
-                        onDrop={() => handleDrop(index)}
+                        className="intersection circle-1"
+                        onClick={() => rotateGridCounterclockwise(0)}
                     >
-                        {renderBoxContent(box)}
+                        <FaRotate
+                            style={{
+                                color: "#ededed",
+                                fontSize: "1.5em",
+                                transform: "scaleY(-1)",
+                            }}
+                        />
                     </div>
-                ))}
+                    <div
+                        className="intersection circle-2"
+                        onClick={() => rotateGridClockwise(2)}
+                    >
+                        <FaRotate
+                            style={{ color: "#ededed", fontSize: "1.5em" }}
+                        />
+                    </div>
+                    <div
+                        className="intersection circle-3"
+                        onClick={() => rotateGridCounterclockwise(5)}
+                    >
+                        <FaRotate
+                            style={{
+                                color: "#ededed",
+                                fontSize: "1.5em",
+                                transform: "scaleY(-1)",
+                            }}
+                        />
+                    </div>
+                    <div
+                        className="intersection circle-4"
+                        onClick={() => rotateGridClockwise(8)}
+                    >
+                        <FaRotate
+                            style={{ color: "#ededed", fontSize: "1.5em" }}
+                        />
+                    </div>
+                    <div
+                        className="intersection circle-5"
+                        onClick={() => rotateGridCounterclockwise(10)}
+                    >
+                        <FaRotate
+                            style={{
+                                color: "#ededed",
+                                fontSize: "1.5em",
+                                transform: "scaleY(-1)",
+                            }}
+                        />
+                    </div>
+                </section>
 
-                {/* Intersection Circles */}
-                <div
-                    className="intersection circle-1"
-                    onClick={() => rotateGridCounterclockwise(0)}
-                >
-                    <FaRotate
-                        style={{
-                            color: "#ededed",
-                            fontSize: "1.5em",
-                            transform: "scaleY(-1)",
-                        }}
-                    />
-                </div>
-                <div
-                    className="intersection circle-2"
-                    onClick={() => rotateGridClockwise(2)}
-                >
-                    <FaRotate style={{ color: "#ededed", fontSize: "1.5em" }} />
-                </div>
-                <div
-                    className="intersection circle-3"
-                    onClick={() => rotateGridCounterclockwise(5)}
-                >
-                    <FaRotate
-                        style={{
-                            color: "#ededed",
-                            fontSize: "1.5em",
-                            transform: "scaleY(-1)",
-                        }}
-                    />
-                </div>
-                <div
-                    className="intersection circle-4"
-                    onClick={() => rotateGridClockwise(8)}
-                >
-                    <FaRotate style={{ color: "#ededed", fontSize: "1.5em" }} />
-                </div>
-                <div
-                    className="intersection circle-5"
-                    onClick={() => rotateGridCounterclockwise(10)}
-                >
-                    <FaRotate
-                        style={{
-                            color: "#ededed",
-                            fontSize: "1.5em",
-                            transform: "scaleY(-1)",
-                        }}
-                    />
-                </div>
-            </section>
-            <div className="control-buttons">
-                <button
-                    className="control-button reset-button"
-                    onClick={clearGrid}
-                >
-                    Clear Grid{" "}
-                </button>
-                <button
-                    className="control-button save-button"
-                    onClick={saveInitial}
-                >
-                    Save Initial
-                </button>
-                <button
-                    className="control-button revert-button"
-                    onClick={revertToInitial}
-                >
-                    Revert
-                </button>
-            </div>
-            <section className="grid-4x11">
-                <div className="grid-4x11-row">
-                    <div className="grid-4x11-box">Time</div>
-                    {Array.from({ length: 10 }, (_, i) => (
-                        <div key={i} className="grid-4x11-box">
-                            {i + 1}
+                <section className="grid-controls">
+                    <section className="grid-4x11">
+                        <div className="grid-4x11-row">
+                            <div className="grid-4x11-box">Time</div>
+                            {Array.from({ length: 10 }, (_, i) => (
+                                <div key={i} className="grid-4x11-box">
+                                    {i + 1}
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
 
-                <div className="grid-4x11-row">
-                    <div className="grid-4x11-box">Platform</div>
-                    {PlatformGrid.map((box, i) => (
-                        <div
-                            key={i}
-                            className={`grid-4x11-box ${
-                                activeCell.section === "platform" &&
-                                activeCell.index === i
-                                    ? "active"
-                                    : ""
-                            }`}
+                        <div className="grid-4x11-row">
+                            <div className="grid-4x11-box">Platform</div>
+                            {PlatformGrid.map((box, i) => (
+                                <div
+                                    key={i}
+                                    className={`grid-4x11-box ${
+                                        activeCell.section === "platform" &&
+                                        activeCell.index === i
+                                            ? "active"
+                                            : ""
+                                    }`}
+                                >
+                                    {box}
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="grid-4x11-row">
+                            <div className="grid-4x11-box">Red Agent</div>
+                            {redAgentGrid.map((box, i) => (
+                                <div
+                                    key={i}
+                                    className={`grid-4x11-box ${
+                                        activeCell.section === "red-agent" &&
+                                        activeCell.index === i
+                                            ? "active"
+                                            : ""
+                                    }`}
+                                    onClick={() =>
+                                        handleCellClick("red-agent", i)
+                                    }
+                                >
+                                    {box}
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="grid-4x11-row">
+                            <div className="grid-4x11-box">Blue Agent</div>
+                            {blueAgentGrid.map((box, i) => (
+                                <div
+                                    key={i}
+                                    className={`grid-4x11-box ${
+                                        activeCell.section === "blue-agent" &&
+                                        activeCell.index === i
+                                            ? "active"
+                                            : ""
+                                    }`}
+                                    onClick={() =>
+                                        handleCellClick("blue-agent", i)
+                                    }
+                                >
+                                    {box}
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                    <div className="control-buttons">
+                        <button
+                            className="control-button reset-button"
+                            onClick={clearGrid}
                         >
-                            {box}
-                        </div>
-                    ))}
-                </div>
-
-                <div className="grid-4x11-row">
-                    <div className="grid-4x11-box">Red Agent</div>
-                    {redAgentGrid.map((box, i) => (
-                        <div
-                            key={i}
-                            className={`grid-4x11-box ${
-                                activeCell.section === "red-agent" &&
-                                activeCell.index === i
-                                    ? "active"
-                                    : ""
-                            }`}
-                            onClick={() => handleCellClick("red-agent", i)}
+                            Clear Grid{" "}
+                        </button>
+                        <button
+                            className="control-button save-button"
+                            onClick={saveInitial}
                         >
-                            {box}
-                        </div>
-                    ))}
-                </div>
-
-                <div className="grid-4x11-row">
-                    <div className="grid-4x11-box">Blue Agent</div>
-                    {blueAgentGrid.map((box, i) => (
-                        <div
-                            key={i}
-                            className={`grid-4x11-box ${
-                                activeCell.section === "blue-agent" &&
-                                activeCell.index === i
-                                    ? "active"
-                                    : ""
-                            }`}
-                            onClick={() => handleCellClick("blue-agent", i)}
+                            Save Initial
+                        </button>
+                        <button
+                            className="control-button revert-button"
+                            onClick={revertToInitial}
                         >
-                            {box}
-                        </div>
-                    ))}
-                </div>
+                            Revert
+                        </button>
+                    </div>
+                </section>
             </section>
         </main>
     )

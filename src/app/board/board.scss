@@ -14,21 +14,10 @@
     /* Add this to control the rotation */
 }
 
-.rotate {
-    animation: rotate-animation 0.6s ease forwards; /* Trigger animation */
-}
-
-@keyframes rotate-animation {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg); /* Complete rotation */
-    }
-}
-
 .grid-box {
     border: 1px solid #ccc; /* Border for each box */
+    border: 1px solid blue;
+    aspect-ratio: 1/1;
     display: flex;
     align-items: center;
     font-size: 24px; /* Base font size for content */
@@ -38,13 +27,13 @@
 
     /* Ensure text shrinks if it overflows */
     overflow: auto; /* Hide overflowing content */
-    padding: 10px; /* Add padding for spacing */
+    padding: 1em; /* Add padding for spacing */
     box-sizing: border-box; /* Include padding in element's total width and height */
 }
 /* Styling for the small circles */
 .intersection {
-    width: 40px; /* Fixed size for circles */
-    height: 40px; /* Fixed size for circles */
+    width: 2em; /* Fixed size for circles */
+    height: 2em; /* Fixed size for circles */
     border-radius: 50%;
     position: absolute; /* Absolute positioning for anchoring */
     display: flex;
@@ -55,67 +44,40 @@
 
 /* Positioning for each circle based on grid */
 .circle-1 {
-    top: calc(25% - 20px); /* Position between box 1 and 2 */
-    left: calc(12.5% - -40px); /* Left side */
+    top: calc(25% - 1em); /* Position between box 1 and 2 */
+    left: calc(25% - 1em); /* Left side */
     background-color: red;
     border: 5px solid #0a0a0a;
 }
 
 .circle-2 {
-    top: calc(25% - 20px); /* Position between box 3 and 4 */
-    left: calc(87.5% - 80px); /* Right side */
+    top: calc(25% - 1em); /* Position between box 3 and 4 */
+    right: calc(25% - 1em); /* Right side */
     background-color: blue;
     border: 5px solid #0a0a0a;
 }
 
 .circle-3 {
-    top: calc(50% - 20px); /* Centered vertically */
-    left: calc(50% - 20px); /* Centered horizontally */
+    top: calc(50% - 1em); /* Centered vertically */
+    left: calc(50% - 1em); /* Centered horizontally */
     background-color: orange;
     border: 5px solid #0a0a0a;
 }
 
 .circle-4 {
-    top: calc(75% - 20px); /* Position between box 9 and 10 */
-    left: calc(12.5% - -40px); /* Left side */
+    bottom: calc(25% - 1em); /* Position between box 9 and 10 */
+    left: calc(25% - 1em); /* Left side */
     background-color: purple;
     border: 5px solid #0a0a0a;
 }
 
 .circle-5 {
-    top: calc(75% - 20px); /* Position between box 11 and 12 */
-    left: calc(87.5% - 80px); /* Right side */
+    bottom: calc(25% - 1em); /* Position between box 11 and 12 */
+    right: calc(25% - 1em); /* Right side */
     background-color: green;
     border: 5px solid #0a0a0a;
 }
 
-/* Existing styles... */
-
-.input-table {
-    margin-top: 20px; /* Space above the table */
-    overflow-x: auto; /* Allow horizontal scroll on smaller screens */
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px; /* Space between grid and table */
-}
-
-th,
-td {
-    border: 1px solid #ccc; /* Table borders */
-    padding: 8px; /* Padding for cells */
-    text-align: center; /* Center text */
-}
-
-input {
-    width: 100%; /* Full width of the cell */
-    border: 1px solid #ccc; /* Border for inputs */
-    border-radius: 4px; /* Rounded corners for inputs */
-    padding: 4px; /* Padding inside inputs */
-    box-sizing: border-box; /* Ensure padding doesn't affect width */
-}
 .legend {
     display: flex;
     align-items: center;
@@ -147,9 +109,11 @@ input {
 }
 .grid-4x11 {
     display: grid;
-    grid-template-columns: repeat(11, 100px); /* 11 columns */
-    margin-top: 20px;
-    gap: 10px;
+    grid-template-columns: repeat(11, 90px); /* 11 columns */
+    align-content: center;
+
+    // margin-top: 0px;
+    // gap: 10px;
 
     .grid-4x11-row {
         display: contents; /* Allows direct children to be grid items */
@@ -161,6 +125,7 @@ input {
         display: flex;
         align-items: center;
         justify-content: center;
+        background-color: red;
         border: 1px solid #ccc;
         background-color: #f9f9f9; /* Light gray for default boxes */
         color: #333; /* Darker text color for better contrast */
@@ -315,4 +280,11 @@ input {
 .animate-counterclockwise {
     animation: rotate-counterclockwise 0.5s ease forwards;
     background-color: red; /* Example of styling to test */
+}
+
+.upper-platform {
+    display: flex;
+    gap: 1em;
+    justify-content: center;
+    align-items: flex-start;
 }
