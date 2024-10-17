@@ -24,7 +24,6 @@ type BoxValue =
     | null
 
 export default function Board() {
-    // Create an array of 16 boxes with null values initially
     const [animatedBoxes, setAnimatedBoxes] = useState<{
         indices: number[]
         direction: string | null
@@ -36,7 +35,6 @@ export default function Board() {
     const [grid, setGrid] = useState<(BoxValue | string)[]>(
         Array(16).fill(null)
     )
-    // Create separate arrays for Red Agent and Blue Agent with null values initially
     const [redAgentGrid, setRedAgentGrid] = useState<(BoxValue | string)[]>(
         Array(10).fill(null)
     )
@@ -69,78 +67,10 @@ export default function Board() {
         (BoxValue | string)[]
     >(Array(10).fill(null))
 
-    // Handle box click to activate it
     const handleBoxClick = (index: number) => {
         setActiveBox(index)
     }
 
-    // Function to handle key presses
-    const handleKeyPress = (event: KeyboardEvent) => {
-        if (activeCell.index !== null) {
-            const { section, index } = activeCell
-
-            if (section === "red-agent") {
-                const newGrid = [...redAgentGrid]
-                // Use the key pressed to determine the value
-                switch (event.key) {
-                    case "ArrowUp":
-                        newGrid[index] = "⬆️" // Up arrow
-                        break
-                    case "ArrowDown":
-                        newGrid[index] = "⬇️" // Down arrow
-                        break
-                    case "ArrowLeft":
-                        newGrid[index] = "⬅️" // Left arrow
-                        break
-                    case "ArrowRight":
-                        newGrid[index] = "➡️" // Right arrow
-                        break
-                    default:
-                        break
-                }
-                setRedAgentGrid(newGrid)
-            } else if (section === "blue-agent") {
-                const newGrid = [...blueAgentGrid]
-                // Use the key pressed to determine the value
-                switch (event.key) {
-                    case "ArrowUp":
-                        newGrid[index] = "⬆️" // Up arrow
-                        break
-                    case "ArrowDown":
-                        newGrid[index] = "⬇️" // Down arrow
-                        break
-                    case "ArrowLeft":
-                        newGrid[index] = "⬅️" // Left arrow
-                        break
-                    case "ArrowRight":
-                        newGrid[index] = "➡️" // Right arrow
-                        break
-                    default:
-                        break
-                }
-                setBlueAgentGrid(newGrid)
-            }
-        }
-    }
-
-    // Effect to listen for key presses
-    useEffect(() => {
-        const handleKeyDown = (event: KeyboardEvent) => handleKeyPress(event)
-        window.addEventListener("keydown", handleKeyDown)
-
-        // Cleanup event listener on component unmount
-        return () => {
-            window.removeEventListener("keydown", handleKeyDown)
-        }
-    }, [activeCell])
-
-    const handleCellClick = (section: string, index: number) => {
-        setActiveCell({ section, index })
-        // Activate platform cell
-        if (section === "platform") {
-            setActiveBox(index) // Set active platform box
-        }
-    }
     const rotateGridClockwise = (startIndex: number) => {
         const newGrid = [...grid]
         const temp = newGrid[startIndex]
@@ -156,12 +86,12 @@ export default function Board() {
                 startIndex + 4,
                 startIndex + 5,
             ],
-            direction: "clockwise", // Set direction to clockwise
+            direction: "clockwise",
         })
 
         setGrid(newGrid)
         setTimeout(() => {
-            setAnimatedBoxes({ indices: [], direction: null }) // Clear animation state after the animation completes
+            setAnimatedBoxes({ indices: [], direction: null })
         }, 500)
     }
 
@@ -180,12 +110,12 @@ export default function Board() {
                 startIndex + 4,
                 startIndex + 5,
             ],
-            direction: "counterclockwise", // Set direction to counterclockwise
+            direction: "counterclockwise",
         })
 
         setGrid(newGrid)
         setTimeout(() => {
-            setAnimatedBoxes({ indices: [], direction: null }) // Clear animation state after the animation completes
+            setAnimatedBoxes({ indices: [], direction: null })
         }, 500)
     }
 
@@ -193,28 +123,17 @@ export default function Board() {
         if (activeBox !== null) {
             const newGrid = [...grid]
             if (legend === "document") {
-                const docLabel = `${docCount + 1} 📃` // Create a document label
-                newGrid[activeBox] = docLabel // Assign the document label to the active box
-                setDocCount(docCount + 1) // Increment document count
+                const docLabel = `${docCount + 1} 📃`
+                newGrid[activeBox] = docLabel
+                setDocCount(docCount + 1)
             } else {
-                newGrid[activeBox] = legend // Assign other legends
+                newGrid[activeBox] = legend
             }
-            setGrid(newGrid) // Update grid state
-            setActiveBox(null) // Deselect box after assigning
+            setGrid(newGrid)
+            setActiveBox(null)
         }
         setSelectedLegend(legend) // Set selected legend
     }
-
-    // Effect to listen for key presses
-    useEffect(() => {
-        const handleKeyDown = (event: KeyboardEvent) => handleKeyPress(event)
-        window.addEventListener("keydown", handleKeyDown)
-
-        // Cleanup event listener on component unmount
-        return () => {
-            window.removeEventListener("keydown", handleKeyDown)
-        }
-    }, [activeCell])
 
     // Function to calculate Manhattan distance
     const calculateManhattanDistance = (start: number, end: number) => {
@@ -227,7 +146,6 @@ export default function Board() {
         return Math.abs(startX - endX) + Math.abs(startY - endY)
     }
 
-    // Function to handle drag start
     const handleDragStart = (index: number, box: BoxValue) => {
         // Allow dragging only if the box contains an agent
         if (box && (box.includes("red-agent") || box.includes("blue-agent"))) {
@@ -235,8 +153,26 @@ export default function Board() {
         }
     }
 
-    // Function to handle drop
-    // Function to handle drop with Manhattan distance restriction
+    const [redAgentMoves, setRedAgentMoves] = useState<string[]>([]) // Track red agent moves
+    const [blueAgentMoves, setBlueAgentMoves] = useState<string[]>([]) // Track blue agent moves
+
+    // Function to determine direction of movement
+    const getMoveDirection = (start: number, end: number) => {
+        const gridSize = 4 // Assuming a 4x4 grid
+        const startX = start % gridSize
+        const startY = Math.floor(start / gridSize)
+        const endX = end % gridSize
+        const endY = Math.floor(end / gridSize)
+
+        if (startX === endX && startY > endY) return "⬆️"
+        if (startX === endX && startY < endY) return "⬇️"
+        if (startY === endY && startX > endX) return "⬅️"
+        if (startY === endY && startX < endX) return "➡️"
+
+        return "" // No valid move
+    }
+
+    // Function to handle drop with movement tracking
     const handleDrop = (index: number) => {
         if (activeBox !== null && activeBox !== index) {
             // Calculate the Manhattan distance between the dragged tile and the target tile
@@ -246,6 +182,20 @@ export default function Board() {
             if (distance === 1) {
                 const newGrid = [...grid]
                 const itemToMove = newGrid[activeBox] // Get the current agent or items in the box
+                const moveDirection = getMoveDirection(activeBox, index) // Get move direction
+
+                // Log movements for red or blue agents
+                if (itemToMove && itemToMove.includes("red-agent")) {
+                    setRedAgentMoves((prevMoves) => [
+                        ...prevMoves,
+                        moveDirection,
+                    ])
+                } else if (itemToMove && itemToMove.includes("blue-agent")) {
+                    setBlueAgentMoves((prevMoves) => [
+                        ...prevMoves,
+                        moveDirection,
+                    ])
+                }
 
                 // If the target box is not empty, we append the agent/items to it
                 if (newGrid[index]) {
@@ -324,32 +274,91 @@ export default function Board() {
     return (
         <main id="board-wrap">
             {/* Legend Section */}
+
             <section className="legend">
-                <span
-                    className="red-agent"
-                    onClick={() => handleLegendClick("red-agent")}
-                >
-                    <FaUserSecret style={{ color: "#e7135d" }} /> Red Agent
-                </span>
-                <span
-                    className="blue-agent"
-                    onClick={() => handleLegendClick("blue-agent")}
-                >
-                    <FaUserSecret style={{ color: "#74c0fc" }} /> Blue Agent
-                </span>
-                <span onClick={() => handleLegendClick("document")}>
-                    📃 Document
-                </span>
-                <span onClick={() => handleLegendClick("alarm")}>⏰ Alarm</span>
-                <span onClick={() => handleLegendClick("virus")}>🦠 Virus</span>
-                <span onClick={() => handleLegendClick("red-exit")}>
-                    <FaArrowRightFromBracket style={{ color: "#e7135d" }} />
-                    Red Exit
-                </span>
-                <span onClick={() => handleLegendClick("blue-exit")}>
-                    <FaArrowRightFromBracket style={{ color: "#74C0FC" }} />
-                    Blue Exit
-                </span>
+                <section className="value-legend">
+                    {" "}
+                    <span
+                        className="red-agent"
+                        onClick={() => handleLegendClick("red-agent")}
+                    >
+                        <FaUserSecret style={{ color: "#e7135d" }} /> Red Agent
+                    </span>
+                    <span
+                        className="blue-agent"
+                        onClick={() => handleLegendClick("blue-agent")}
+                    >
+                        <FaUserSecret style={{ color: "#74c0fc" }} /> Blue Agent
+                    </span>
+                    <span onClick={() => handleLegendClick("document")}>
+                        📃 Document
+                    </span>
+                    <span onClick={() => handleLegendClick("alarm")}>
+                        ⏰ Alarm
+                    </span>
+                    <span onClick={() => handleLegendClick("virus")}>
+                        🦠 Virus
+                    </span>
+                    <span onClick={() => handleLegendClick("red-exit")}>
+                        <FaArrowRightFromBracket style={{ color: "#e7135d" }} />
+                        Red Exit
+                    </span>
+                    <span onClick={() => handleLegendClick("blue-exit")}>
+                        <FaArrowRightFromBracket style={{ color: "#74C0FC" }} />
+                        Blue Exit
+                    </span>
+                </section>
+
+                <section className="circle-legend">
+                    <FaRotate
+                        style={{
+                            color: "#ededed",
+                            fontSize: "1.5em",
+                            transform: "scaleY(-1)",
+                            backgroundColor: "red",
+                            borderRadius: "50%",
+                        }}
+                        id="legend-circle-1"
+                    />
+                    <FaRotate
+                        style={{
+                            color: "#ededed",
+                            fontSize: "1.5em",
+                            backgroundColor: "blue",
+                            borderRadius: "50%",
+                        }}
+                        id="legend-circle-2"
+                    />
+                    <FaRotate
+                        style={{
+                            color: "#ededed",
+                            fontSize: "1.5em",
+                            transform: "scaleY(-1)",
+                            backgroundColor: "orange",
+                            borderRadius: "50%",
+                        }}
+                        id="legend-circle-3"
+                    />
+                    <FaRotate
+                        style={{
+                            color: "#ededed",
+                            fontSize: "1.5em",
+                            backgroundColor: "purple",
+                            borderRadius: "50%",
+                        }}
+                        id="legend-circle-4"
+                    />
+                    <FaRotate
+                        style={{
+                            color: "#ededed",
+                            fontSize: "1.5em",
+                            transform: "scaleY(-1)",
+                            backgroundColor: "green",
+                            borderRadius: "50%",
+                        }}
+                        id="legend-circle-5"
+                    />
+                </section>
             </section>
 
             <section className="upper-platform">
@@ -439,73 +448,44 @@ export default function Board() {
                 </section>
 
                 <section className="grid-controls">
-                    <section className="grid-4x11">
-                        <div className="grid-4x11-row">
-                            <div className="grid-4x11-box">Time</div>
-                            {Array.from({ length: 10 }, (_, i) => (
-                                <div key={i} className="grid-4x11-box">
-                                    {i + 1}
-                                </div>
-                            ))}
-                        </div>
-
-                        <div className="grid-4x11-row">
-                            <div className="grid-4x11-box">Platform</div>
-                            {PlatformGrid.map((box, i) => (
-                                <div
-                                    key={i}
-                                    className={`grid-4x11-box ${
-                                        activeCell.section === "platform" &&
-                                        activeCell.index === i
-                                            ? "active"
-                                            : ""
-                                    }`}
-                                >
-                                    {box}
-                                </div>
-                            ))}
-                        </div>
-
-                        <div className="grid-4x11-row">
-                            <div className="grid-4x11-box">Red Agent</div>
-                            {redAgentGrid.map((box, i) => (
-                                <div
-                                    key={i}
-                                    className={`grid-4x11-box ${
-                                        activeCell.section === "red-agent" &&
-                                        activeCell.index === i
-                                            ? "active"
-                                            : ""
-                                    }`}
-                                    onClick={() =>
-                                        handleCellClick("red-agent", i)
-                                    }
-                                >
-                                    {box}
-                                </div>
-                            ))}
-                        </div>
-
-                        <div className="grid-4x11-row">
-                            <div className="grid-4x11-box">Blue Agent</div>
-                            {blueAgentGrid.map((box, i) => (
-                                <div
-                                    key={i}
-                                    className={`grid-4x11-box ${
-                                        activeCell.section === "blue-agent" &&
-                                        activeCell.index === i
-                                            ? "active"
-                                            : ""
-                                    }`}
-                                    onClick={() =>
-                                        handleCellClick("blue-agent", i)
-                                    }
-                                >
-                                    {box}
-                                </div>
-                            ))}
-                        </div>
+                    <section className="movement-log">
+                        <h3>Agent Movements Log</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    {Array.from({ length: 10 }, (_, i) => (
+                                        <th key={i}> {i + 1}</th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>Platform</th>
+                                    {Array.from({ length: 10 }, (_, i) => (
+                                        <td key={i}></td>
+                                    ))}
+                                </tr>
+                                <tr>
+                                    <th>Red Agent</th>
+                                    {Array.from({ length: 10 }, (_, i) => (
+                                        <td key={i}>
+                                            {redAgentMoves[i] || ""}
+                                        </td>
+                                    ))}
+                                </tr>
+                                <tr>
+                                    <th>Blue Agent</th>
+                                    {Array.from({ length: 10 }, (_, i) => (
+                                        <td key={i}>
+                                            {blueAgentMoves[i] || ""}
+                                        </td>
+                                    ))}
+                                </tr>
+                            </tbody>
+                        </table>
                     </section>
+
                     <div className="control-buttons">
                         <button
                             className="control-button reset-button"
@@ -528,6 +508,14 @@ export default function Board() {
                     </div>
                 </section>
             </section>
+
+            <p>
+                <i>
+                    Note: Movement log is not yet functional but the gameboard
+                    is now interactive don't forget to clcik "Save initial"
+                    before playing so that you can revert it back anytime. XD
+                </i>
+            </p>
         </main>
     )
 }

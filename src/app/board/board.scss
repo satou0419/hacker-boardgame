@@ -107,62 +107,7 @@
         }
     }
 }
-.grid-4x11 {
-    display: grid;
-    grid-template-columns: repeat(11, 90px); /* 11 columns */
-    align-content: center;
-
-    // margin-top: 0px;
-    // gap: 10px;
-
-    .grid-4x11-row {
-        display: contents; /* Allows direct children to be grid items */
-    }
-
-    .grid-4x11-box {
-        width: 100px;
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: red;
-        border: 1px solid #ccc;
-        background-color: #f9f9f9; /* Light gray for default boxes */
-        color: #333; /* Darker text color for better contrast */
-
-        &:nth-child(1) {
-            font-weight: bold; /* Bold for the first column */
-            background-color: #007bff; /* Blue for the first column */
-            color: white; /* White text for contrast */
-        }
-
-        &:nth-child(n + 2) {
-            background-color: #e0f7fa; /* Light cyan for numbered columns */
-        }
-
-        &:nth-child(n + 2):hover {
-            background-color: #b2ebf2; /* Slightly darker cyan on hover */
-        }
-    }
-
-    /* Specific styles for each row can be added if needed */
-    .grid-4x11-row:nth-child(2) .grid-4x11-box {
-        background-color: #ffccbc; /* Light peach for the platform row */
-    }
-
-    .grid-4x11-row:nth-child(3) .grid-4x11-box {
-        background-color: #ff8282; /* Light yellow for the red agent row */
-    }
-
-    .grid-4x11-row:nth-child(4) .grid-4x11-box {
-        background-color: #bbdefb; /* Light blue for the blue agent row */
-    }
-}
 .grid-box.active {
-    background-color: gold;
-    border: 2px solid #ffdf00;
-}
-.grid-4x11-box.active {
     background-color: gold;
     border: 2px solid #ffdf00;
 }
@@ -216,6 +161,12 @@
     justify-content: center; // Center the legend items
     margin: 20px 0; // Add some margin for spacing
     padding: 10px; // Add padding
+    flex-direction: column;
+
+    .circle-legend {
+        display: flex;
+        gap: 2em;
+    }
 
     span {
         margin: 5px 10px; // Space between items
@@ -287,4 +238,61 @@
     gap: 1em;
     justify-content: center;
     align-items: flex-start;
+}
+.movement-log {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            width: 20px;
+            text-align: center;
+        }
+
+        td {
+            width: 100px;
+            max-height: 30px;
+            min-height: 30px;
+        }
+        th {
+            background-color: #f7cac9; // Light pastel pink for table headers
+            font-weight: bold;
+            color: #333;
+        }
+
+        thead th {
+            border-bottom: 2px solid #333;
+        }
+
+        tbody th {
+            background-color: #f4f1bb; // Light pastel yellow for row headers
+            text-align: left;
+            color: #333;
+        }
+
+        tbody td {
+            height: 40px; // Adjust the height of cells
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #c2e9fb; // Light pastel blue for even rows
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: #e4f9d4; // Light pastel green for odd rows
+        }
+    }
+
+    th {
+        text-align: center;
+        background-color: #f7cac9; // Same light pastel pink for other table headers
+    }
 }
